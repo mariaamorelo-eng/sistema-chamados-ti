@@ -28,6 +28,7 @@ curl -s -X POST http://localhost:1025/api/v1/tecnicos -H "Content-Type: applicat
 
 # Cadastrar Técnico 2
 curl -s -X POST http://localhost:1025/api/v1/tecnicos -H "Content-Type: application/json" -d '{"nome": "Felipe Souza", "especialidade": "Hardware"}' | jq .
+
 2.2 Consultar e Filtrar Técnicos (GET — 200 OK)
 Bash
 # Listar todos os técnicos
