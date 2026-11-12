@@ -44,58 +44,46 @@ node server.js &
 ps aux | grep "server.js"
 
 # Encerrar o servidor
-kill -9 <PID>
-5. Mapa de Endpoints e Status HTTPMétodoRotaDescriçãoStatus HTTPPOST/api/v1/tecnicosCadastrar novo técnico201 / 400GET/api/v1/tecnicosListar técnicos (aceita ?especialidade=)200GET/api/v1/tecnicos/:idBuscar técnico por ID200 / 404PUT/api/v1/tecnicos/:idAtualização completa do técnico200 / 400 / 404PATCH/api/v1/tecnicos/:id/especialidadeAtualização parcial da especialidade200 / 400 / 404DELETE/api/v1/tecnicos/:idRemover técnico por ID200 / 404POST/api/v1/chamadosAbrir novo chamado201 / 400GET/api/v1/chamadosListar chamados (?status= / ?tecnicoId=)200GET/api/v1/chamados/:idBuscar chamado por ID200 / 404PUT/api/v1/chamados/:idAtualização completa do chamado200 / 400 / 404PATCH/api/v1/chamados/:id/statusAtualização parcial do status do chamado200 / 400 / 404DELETE/api/v1/chamados/:idRemover chamado por ID200 / 4046. Testes Automatizados via cURL (Por Status HTTP)6.1 Status 201 — Cadastrar Técnicos e Abrir Chamados (POST)Cadastrar Técnicos (POST /api/v1/tecnicos) — Status 201Bash# Cadastrar Técnico 1
+kill -9 2. Módulo: Técnicos (/api/v1/tecnicos) 2.1 Cadastrar Técnicos — POST /api/v1/tecnicos (201 Created) Bash
+Cadastrar Técnico 1
 curl -s -X POST http://localhost:1025/api/v1/tecnicos -H "Content-Type: application/json" -d '{"nome": "Maria Eduarda Morelo", "especialidade": "Redes"}' | jq .
-
-# Cadastrar Técnico 2
-curl -s -X POST http://localhost:1025/api/v1/tecnicos -H "Content-Type: application/json" -d '{"nome": "Felipe Souza", "especialidade": "Hardware"}' | jq .
-Abrir Chamados (POST /api/v1/chamados) — Status 201Bash# Abrir Chamado 1 (vinculado ao Técnico 1)
-curl -s -X POST http://localhost:1025/api/v1/chamados -H "Content-Type: application/json" -d '{"titulo": "Queda de rede no setor B", "descricao": "Switch sem conectividade", "tecnicoId": 1}' | jq .
-
-# Abrir Chamado 2 (vinculado ao Técnico 2)
-curl -s -X POST http://localhost:1025/api/v1/chamados -H "Content-Type: application/json" -d '{"titulo": "Troca de SSD", "descricao": "Estacao de trabalho lenta", "tecnicoId": 2}' | jq .
-6.2 Status 200 — Consultar, Editar e Deletar (GET, PUT, PATCH, DELETE)Consultar Técnicos (GET /api/v1/tecnicos) — Status 200Bash# Listar todos os técnicos
+Cadastrar Técnico 2
+curl -s -X POST http://localhost:1025/api/v1/tecnicos -H "Content-Type: application/json" -d '{"nome": "Felipe Souza", "especialidade": "Hardware"}' | jq . 2.2 Consultar e Filtrar Técnicos — GET /api/v1/tecnicos (200 OK) Bash
+Listar todos os técnicos (GET /api/v1/tecnicos)
 curl -s http://localhost:1025/api/v1/tecnicos | jq .
-
-# Filtrar por especialidade
+Filtrar por especialidade (GET /api/v1/tecnicos?especialidade=Redes)
 curl -s "http://localhost:1025/api/v1/tecnicos?especialidade=Redes" | jq .
-
-# Buscar técnico por ID
-curl -s http://localhost:1025/api/v1/tecnicos/1 | jq .
-Consultar Chamados (GET /api/v1/chamados) — Status 200Bash# Listar todos os chamados
-curl -s http://localhost:1025/api/v1/chamados | jq .
-
-# Filtrar por status
-curl -s "http://localhost:1025/api/v1/chamados?status=ABERTO" | jq .
-
-# Filtrar por técnico responsável
-curl -s "http://localhost:1025/api/v1/chamados?tecnicoId=1" | jq .
-
-# Buscar chamado por ID
-curl -s http://localhost:1025/api/v1/chamados/1 | jq .
-Atualizar Técnicos (PUT e PATCH /api/v1/tecnicos) — Status 200Bash# Atualização completa (PUT)
+Buscar técnico por ID (GET /api/v1/tecnicos/1)
+curl -s http://localhost:1025/api/v1/tecnicos/1 | jq . 2.3 Atualizar Técnicos — PUT e PATCH (200 OK) Bash
+Atualização completa (PUT /api/v1/tecnicos/2)
 curl -s -X PUT http://localhost:1025/api/v1/tecnicos/2 -H "Content-Type: application/json" -d '{"nome": "Felipe Pereira Souza", "especialidade": "Infraestrutura"}' | jq .
-
-# Atualização parcial da especialidade (PATCH)
-curl -s -X PATCH http://localhost:1025/api/v1/tecnicos/1/especialidade -H "Content-Type: application/json" -d '{"especialidade": "Seguranca da Informacao"}' | jq .
-Atualizar Chamados (PUT e PATCH /api/v1/chamados) — Status 200Bash# Atualização completa do chamado (PUT)
+Atualização parcial da especialidade (PATCH /api/v1/tecnicos/1/especialidade)
+curl -s -X PATCH http://localhost:1025/api/v1/tecnicos/1/especialidade -H "Content-Type: application/json" -d '{"especialidade": "Seguranca da Informacao"}' | jq . 3. Módulo: Chamados (/api/v1/chamados) 3.1 Abrir Chamados — POST /api/v1/chamados (201 Created) Bash
+Abrir Chamado 1 vinculado ao Técnico 1
+curl -s -X POST http://localhost:1025/api/v1/chamados -H "Content-Type: application/json" -d '{"titulo": "Queda de rede no setor B", "descricao": "Switch sem conectividade", "tecnicoId": 1}' | jq .
+Abrir Chamado 2 vinculado ao Técnico 2
+curl -s -X POST http://localhost:1025/api/v1/chamados -H "Content-Type: application/json" -d '{"titulo": "Troca de SSD", "descricao": "Estacao de trabalho lenta", "tecnicoId": 2}' | jq . 3.2 Consultar e Filtrar Chamados — GET /api/v1/chamados (200 OK) Bash
+Listar todos os chamados (GET /api/v1/chamados)
+curl -s http://localhost:1025/api/v1/chamados | jq .
+Filtrar por status (GET /api/v1/chamados?status=ABERTO)
+curl -s "http://localhost:1025/api/v1/chamados?status=ABERTO" | jq .
+Filtrar por técnico responsável (GET /api/v1/chamados?tecnicoId=1)
+curl -s "http://localhost:1025/api/v1/chamados?tecnicoId=1" | jq .
+Buscar chamado por ID (GET /api/v1/chamados/1)
+curl -s http://localhost:1025/api/v1/chamados/1 | jq . 3.3 Atualizar Chamados — PUT e PATCH (200 OK) Bash
+Atualização completa do chamado (PUT /api/v1/chamados/2)
 curl -s -X PUT http://localhost:1025/api/v1/chamados/2 -H "Content-Type: application/json" -d '{"titulo": "Troca de SSD NVMe", "descricao": "Instalacao de SSD 1TB concluida", "status": "EM_ANDAMENTO", "tecnicoId": 2}' | jq .
-
-# Atualização parcial de status (PATCH)
-curl -s -X PATCH http://localhost:1025/api/v1/chamados/1/status -H "Content-Type: application/json" -d '{"status": "CONCLUIDO"}' | jq .
-Remover Registros (DELETE) — Status 200Bash# Remover Chamado 2
-curl -s -X DELETE http://localhost:1025/api/v1/chamados/2 | jq .
-
-# Remover Técnico 2
-curl -s -X DELETE http://localhost:1025/api/v1/tecnicos/2 | jq .
-6.3 Status 400 — Erros de Validação (Bad Request)Bash# Status 400: Campo obrigatório ausente (POST /api/v1/tecnicos)
+Atualização parcial de status (PATCH /api/v1/chamados/1/status)
+curl -s -X PATCH http://localhost:1025/api/v1/chamados/1/status -H "Content-Type: application/json" -d '{"status": "CONCLUIDO"}' | jq . 4. Testes de Validação e Erros (400 e 404) 4.1 Erros de Validação — 400 Bad Request Bash
+Campo obrigatório ausente (POST /api/v1/tecnicos)
 curl -i -s -X POST http://localhost:1025/api/v1/tecnicos -H "Content-Type: application/json" -d '{"nome": "Tecnico Incompleto"}'
-
-# Status 400: Chamado vinculado a tecnicoId inexistente (POST /api/v1/chamados)
-curl -i -s -X POST http://localhost:1025/api/v1/chamados -H "Content-Type: application/json" -d '{"titulo": "Erro", "descricao": "Teste de validacao", "tecnicoId": 999}'
-6.4 Status 404 — Recursos Inexistentes (Not Found)Bash# Status 404: Técnico inexistente (GET /api/v1/tecnicos/999)
+Chamado vinculado a tecnicoId inexistente (POST /api/v1/chamados)
+curl -i -s -X POST http://localhost:1025/api/v1/chamados -H "Content-Type: application/json" -d '{"titulo": "Erro", "descricao": "Teste de validacao", "tecnicoId": 999}' 4.2 Recursos Inexistentes — 404 Not Found Bash
+Técnico inexistente (GET /api/v1/tecnicos/999)
 curl -i -s http://localhost:1025/api/v1/tecnicos/999
-
-# Status 404: Chamado inexistente (GET /api/v1/chamados/999)
-curl -i -s http://localhost:1025/api/v1/chamados/999
+Chamado inexistente (GET /api/v1/chamados/999)
+curl -i -s http://localhost:1025/api/v1/chamados/999 5. Remoção de Registros — DELETE (200 OK) Bash
+Remover Chamado 2 (DELETE /api/v1/chamados/2)
+curl -s -X DELETE http://localhost:1025/api/v1/chamados/2 | jq .
+Remover Técnico 2 (DELETE /api/v1/tecnicos/2)
+curl -s -X DELETE http://localhost:1025/api/v1/tecnicos/2 | jq .
